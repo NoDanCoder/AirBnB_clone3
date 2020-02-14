@@ -3,17 +3,37 @@
 """ Import Modules to get Time and ID generators """
 from datetime import datetime
 from datetime import date
+import dateutil.parser
 from uuid import uuid4 as uuid
 
 
 class BaseModel:
     """ BaseModel Creator Structure. """
 
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """ BaseModel instance initialization. """
-        self.id = str(uuid())
-        self.created_at = datetime.now()
-        self.updated_at = datetime.now()
+        if kwargs:
+            self.set_by_kwargs(**kwargs)
+        else:
+            self.id = str(uuid())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
+
+
+# Set properties by kwargs
+
+    @staticmethod
+    def isoparse(isoformat):
+        """ parse a date from iso format to datetime object """
+        return datetime.strptime(isoformat, "%Y-%m-%dT%H:%M:%S.%f")
+
+    def set_by_kwargs(self, **kwargs):
+        """ set properties by kwargs to a BaseModel instance """
+        for k, v in kwargs.items():
+            if k == 'created_at' or k == 'updated_at':
+                setattr(self, k, self.isoparse(v))
+            elif k != '__class__':
+                setattr(self, k, v)
 
 # Modify Instances
 
