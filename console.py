@@ -19,10 +19,8 @@ class HBNBCommand(cmd.Cmd):
         return True
 
     def emptyline(self):
-        """ """
+        """ Disable any action on BlankLine """
         pass
-
-            
 
 
 if __name__ == '__main__':
