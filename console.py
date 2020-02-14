@@ -1,17 +1,29 @@
 #!/usr/bin/python3
 """ Entry point of the command interpreter """
-import subprocess
-from cmd import Cmd
+import cmd
 
 
-class Console(Cmd):
+class HBNBCommand(cmd.Cmd):
     """ Class which control the console, and user interface """
 
     prompt = '(hbtn)'
 
-    def default(self, line):  # this method will catch all commands
-        subprocess.call(line, shell=True)
+    # commands
+
+    def do_quit(self, line):
+        """ Exist of the console by cmd """
+        return True
+
+    def do_EOF(self, line):
+        """ Exist of the console by signal """
+        return True
+
+    def emptyline(self):
+        """ """
+        pass
+
+            
 
 
 if __name__ == '__main__':
-    Console().cmdloop()
+    HBNBCommand().cmdloop()
