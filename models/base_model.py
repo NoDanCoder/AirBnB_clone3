@@ -2,6 +2,7 @@
 
 """ Import Modules to get Time and ID generators """
 from datetime import datetime
+from datetime import date
 from uuid import uuid4 as uuid
 
 
@@ -25,8 +26,8 @@ class BaseModel:
     def to_dict(self):
         """ Return all info of a BaseModel instance. """
         return {**self.__dict__, '__class__': self.getType,
-                'updated_at': str(self.updated_at),
-                'created_at': str(self.created_at)}
+                'updated_at': self.updated_at.isoformat(),
+                'created_at': self.created_at.isoformat()}
 
 # Print info of instances
 
