@@ -2,8 +2,6 @@
 
 """ Import Modules to get Time and ID generators """
 from datetime import datetime
-from datetime import date
-import dateutil.parser
 from uuid import uuid4 as uuid
 
 
