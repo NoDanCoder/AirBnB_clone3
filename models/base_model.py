@@ -2,6 +2,7 @@
 
 """ Import Modules to get Time and ID generators """
 from datetime import datetime
+from models import storage
 from uuid import uuid4 as uuid
 
 
@@ -9,13 +10,14 @@ class BaseModel:
     """ BaseModel Creator Structure. """
 
     def __init__(self, *args, **kwargs):
-        """ BaseModel instance initialization. """
+        """ BaseModel instance initialization and, add the obj to a buff. """
         if kwargs:
             self.set_by_kwargs(**kwargs)
         else:
             self.id = str(uuid())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
 
 
 # Set properties by kwargs
@@ -36,8 +38,9 @@ class BaseModel:
 # Modify Instances
 
     def save(self):
-        """ Save changes of a BaseModel instances. """
+        """ Save changes of a BaseModel instances and update JSON file. """
         self.updated_at = datetime.now()
+        storage.save()
 
 # Get info of instance
 
