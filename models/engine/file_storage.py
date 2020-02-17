@@ -10,12 +10,16 @@ class FileStorage:
     __file_path = "file.json"
     __objects = {}
 
+    def constants(self):
+        """ Constant values can't modify """
+        return ['id', 'created_at', 'updated_at']
+
     def all(self):
         """ returns the dictionary '__objects' """
         return FileStorage.__objects
 
     def new(self, obj):
-        """ add in '__objects' a BaseModel instance dict info """
+        """ add in '__objects' a BaseModel instance """
         FileStorage.__objects[obj.getType + "." + obj.id] = obj
 
     def save(self):
@@ -23,6 +27,10 @@ class FileStorage:
         with open(FileStorage.__file_path, 'w', encoding='utf8') as f:
             json.dump({k: v.to_dict() for k, v
                        in FileStorage.__objects.items()}, f)
+
+    def delete(self, class_name, obj_id):
+        """ delete in '__objects' a BaseModel instance by id """
+        del FileStorage.__objects[class_name + "." + obj_id]
 
     # Create and list from JSON file
 
