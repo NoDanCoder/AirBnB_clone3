@@ -2,7 +2,12 @@
 """ Entry point of the command interpreter """
 import cmd
 from models import storage
+from models.amenity import Amenity
 from models.base_model import BaseModel
+from models.city import City
+from models.place import Place
+from models.review import Review
+from models.state import State
 from models.user import User
 
 
@@ -10,7 +15,8 @@ class HBNBCommand(cmd.Cmd):
     """ Class which control the console, and user interface """
 
     prompt = '(hbtn) '
-    __buff_class = ['BaseModel', 'User']
+    __BaseModel_subclass = [cls.__name__ for cls in BaseModel.__subclasses__()]
+    __buff_class = ['BaseModel', *__BaseModel_subclass]
 
     # general commands
 
@@ -32,7 +38,7 @@ class HBNBCommand(cmd.Cmd):
         """ create a new BaseModel instance """
         if self.check_input(items):
             className = items.split()[0]
-            obj = eval(className)()
+            obj = storage.create_obj(className)
             obj.save()
             print(obj.id)
 

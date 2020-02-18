@@ -42,13 +42,20 @@ class FileStorage:
 
         with open(FileStorage.__file_path, 'r', encoding='utf8') as f:
             for v in json.load(f).values():
-                self.new(self._create_obj(v['__class__'], v))
+                self.new(self.create_obj(v['__class__'], v))
 
     @staticmethod
-    def _create_obj(className, chargeValues):
+    def create_obj(className, chargeValues=None):
         """ Create an instance from a class dynamically """
+        from models.amenity import Amenity
         from models.base_model import BaseModel
+        from models.city import City
+        from models.place import Place
+        from models.review import Review
+        from models.state import State
         from models.user import User
+        if chargeValues is None:
+            return locals()[className]()
         return locals()[className](**chargeValues)
 
     # Auto_caster
