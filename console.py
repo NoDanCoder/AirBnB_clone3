@@ -29,41 +29,21 @@ class HBNBCommand(cmd.Cmd):
 
     def do_create(self, items):
         """ create a new BaseModel instance """
-        if not items:
-            print("** class name missing **")
-        elif items.split()[0] not in HBNBCommand.__buff_class:
-            print("** class doesn't exist **")
-        else:
+        if self.check_input(items):
             obj = BaseModel()
             obj.save()
             print(obj.id)
 
     def do_show(self, items):
         """ Show info of a BaseModel instance """
-        items = items.split()
-        if not items:
-            print("** class name missing **")
-        elif items[0] not in HBNBCommand.__buff_class:
-            print("** class doesn't exist **")
-        elif len(items) < 2:
-            print("** instance id missing **")
-        elif not any(items[1] == x.split(".")[1] for x in storage.all()):
-            print("** no instance found **")
-        else:
-            print(storage.all()[items[0] + "." + items[1]])
+        if self.check_input(items, 1):
+            items = items.split()
+            print(storage.all()[".".join(items[:2])])
 
     def do_destroy(self, items):
         """ Delete an instance """
-        items = items.split()
-        if not items:
-            print("** class name missing **")
-        elif items[0] not in HBNBCommand.__buff_class:
-            print("** class doesn't exist **")
-        elif len(items) < 2:
-            print("** instance id missing **")
-        elif not any(items[1] == x.split(".")[1] for x in storage.all()):
-            print("** no instance found **")
-        else:
+        if self.check_input(items, 1):
+            items = items.split()
             storage.delete(*items[:2])
             storage.save()
 
@@ -79,25 +59,11 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, items):
         """ Update the propertie of a instance """
-        items = items.split()
-        if not items:
-            print("** class name missing **")
-        elif items[0] not in HBNBCommand.__buff_class:
-            print("** class doesn't exist **")
-        elif len(items) < 2:
-            print("** instance id missing **")
-        elif not any(items[1] == x.split(".")[1] for x in storage.all()):
-            print("** no instance found **")
-        elif len(items) < 3:
-            print("** attribute name missing **")
-        elif len(items) < 4:
-            print("** value missing **")
-        elif items[2] in storage.constants():
-            print("** can't modify that property **")
-        else:
+        if self.check_input(items, 2):
             import re
 
-            if not '"' in items[3]:
+            items = items.split()
+            if '"' not in items[3]:
                 value = items[3]
             else:
                 value = "".join(items[3:])
@@ -108,6 +74,49 @@ class HBNBCommand(cmd.Cmd):
             setattr(obj, items[2], value)
             obj.save()
 
+    # Check functions
+
+    @staticmethod
+    def check_input(items, step=0):
+        """ """
+        items = items.split()
+        outValue = False
+
+        # check class input
+        if not items:
+            print("** class name missing **")
+        elif items[0] not in HBNBCommand.__buff_class:
+            print("** class doesn't exist **")
+        else:
+            outValue = True
+
+        if not outValue or step <= 0:
+            return outValue
+        outValue = False
+
+        # check id input
+        if len(items) < 2:
+            print("** instance id missing **")
+        elif not any(items[1] == x.split(".")[1] for x in storage.all()):
+            print("** no instance found **")
+        else:
+            outValue = True
+
+        if not outValue or step <= 1:
+            return outValue
+        outValue = False
+
+        # check atribute and value inputs
+        if len(items) < 3:
+            print("** attribute name missing **")
+        elif len(items) < 4:
+            print("** value missing **")
+        elif items[2] in storage.constants():
+            print("** can't modify that property **")
+        else:
+            return True
+
+        return False
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
