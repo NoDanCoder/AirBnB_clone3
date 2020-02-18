@@ -55,7 +55,8 @@ class HBNBCommand(cmd.Cmd):
         elif items[0] not in HBNBCommand.__buff_class:
             print("** class doesn't exist **")
         else:
-            print([str(v) for k, v in storage.all().items() if k.split(".")[0] == items[0]])
+            print([str(v) for k, v in storage.all().items()
+                  if k.split(".")[0] == items[0]])
 
     def do_update(self, items):
         """ Update the propertie of a instance """
@@ -78,7 +79,10 @@ class HBNBCommand(cmd.Cmd):
 
     @staticmethod
     def check_input(items, step=0):
-        """ """
+        """
+        Check a given input and alert on incorrect format according to
+        step.
+        """
         items = items.split()
         outValue = False
 

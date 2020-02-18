@@ -60,9 +60,10 @@ class FileStorage:
         elif value[0] in ('+', '-') and value[1:].isdecimal():
             return int(value)
 
-        if value.replace('.','',1).isdecimal():
+        if value.replace('.', '', 1).isdecimal():
             return float(value)
-        elif value[0] in ('+', '-') and value[1:].replace('.','',1).isdecimal():
+        elif value[0] in ('+', '-') and \
+                value[1:].replace('.', '', 1).isdecimal():
             return float(value)
 
         return str(value)
