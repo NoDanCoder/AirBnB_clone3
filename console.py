@@ -3,13 +3,14 @@
 import cmd
 from models import storage
 from models.base_model import BaseModel
+from models.user import User
 
 
 class HBNBCommand(cmd.Cmd):
     """ Class which control the console, and user interface """
 
     prompt = '(hbtn) '
-    __buff_class = ['BaseModel']
+    __buff_class = ['BaseModel', 'User']
 
     # general commands
 
@@ -30,7 +31,8 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, items):
         """ create a new BaseModel instance """
         if self.check_input(items):
-            obj = BaseModel()
+            className = items.split()[0]
+            obj = eval(className)()
             obj.save()
             print(obj.id)
 
@@ -67,7 +69,7 @@ class HBNBCommand(cmd.Cmd):
             if '"' not in items[3]:
                 value = items[3]
             else:
-                value = "".join(items[3:])
+                value = " ".join(items[3:])
                 value = re.findall(r'"([^"]*)"', value)[0]
 
             obj = storage.all()[".".join(items[:2])]
@@ -101,7 +103,7 @@ class HBNBCommand(cmd.Cmd):
         # check id input
         if len(items) < 2:
             print("** instance id missing **")
-        elif not any(items[1] == x.split(".")[1] for x in storage.all()):
+        elif not any(".".join(items[:2]) == x for x in storage.all()):
             print("** no instance found **")
         else:
             outValue = True

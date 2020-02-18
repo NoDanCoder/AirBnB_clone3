@@ -48,6 +48,7 @@ class FileStorage:
     def _create_obj(className, chargeValues):
         """ Create an instance from a class dynamically """
         from models.base_model import BaseModel
+        from models.user import User
         return locals()[className](**chargeValues)
 
     # Auto_caster
