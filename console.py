@@ -8,7 +8,7 @@ from models.base_model import BaseModel
 class HBNBCommand(cmd.Cmd):
     """ Class which control the console, and user interface """
 
-    prompt = '(hbtn)'
+    prompt = '(hbtn) '
     __buff_class = ['BaseModel']
 
     # general commands
