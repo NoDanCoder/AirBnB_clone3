@@ -49,3 +49,20 @@ class FileStorage:
         """ Create an instance from a class dynamically """
         from models.base_model import BaseModel
         return locals()[className](**chargeValues)
+
+    # Auto_caster
+
+    @staticmethod
+    def auto_caster(value):
+        """ cast a given input to int, float or str """
+        if value.isdecimal():
+            return int(value)
+        elif value[0] in ('+', '-') and value[1:].isdecimal():
+            return int(value)
+
+        if value.replace('.','',1).isdecimal():
+            return float(value)
+        elif value[0] in ('+', '-') and value[1:].replace('.','',1).isdecimal():
+            return float(value)
+
+        return str(value)

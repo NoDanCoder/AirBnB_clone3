@@ -95,7 +95,19 @@ class HBNBCommand(cmd.Cmd):
         elif items[2] in storage.constants():
             print("** can't modify that property **")
         else:
-            pass
+            import re
+
+            if not '"' in items[3]:
+                value = items[3]
+            else:
+                value = "".join(items[3:])
+                value = re.findall(r'"([^"]*)"', value)[0]
+
+            obj = storage.all()[".".join(items[:2])]
+            value = storage.auto_caster(value)
+            setattr(obj, items[2], value)
+            obj.save()
+
 
 if __name__ == '__main__':
     HBNBCommand().cmdloop()
